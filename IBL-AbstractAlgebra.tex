@@ -1,11 +1,12 @@
-\documentclass[12pt,oneside]{book}
+\documentclass[use filename,itex,epub,class=book,split at=chapter]{internet}
 
+\imode<doc>{
 \usepackage{multicol}
 \usepackage{tabu}
 \usepackage{pdiag}
 \usepackage[table]{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{arrows,automata,positioning}
+\usetikzlibrary{arrows,automata,positioning,external}
 \usepackage{rotating}
 \usepackage[notextcomp]{kpfonts} 
 \usepackage{graphicx}
@@ -41,6 +42,31 @@
 \lfoot{}
 \cfoot{}
 \rfoot{}
+}
+\imode<text>{
+  \let\appendix=\relax
+  \usepackage{environ}
+  \NewEnviron{tabu}{}{}
+  \NewEnviron{multicols}{}{}
+  \NewEnviron{pdiag}{}{}
+  \usepackage{tikz}
+  \colorlet{grey}{gray}
+\usetikzlibrary{arrows,automata,positioning,external}
+  \usepackage{hyperref}
+  \newcommand\smiley{\entity{9786}}
+  \newcommand\euro{\entity{8364}}
+  \renewcommand\fcolorbox[3]{%
+    #3
+  }
+  \pgfkeys{/pgf/images/include external/.code={\includegraphics{#1}}}
+}
+\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"; convert -density 300 -transparent white "\image.pdf" "\image.png"}}
+\tikzexternalize[prefix=figures/IBL-]
+\tikzset{external/figure name=figure}
+
+\makeatletter
+\def\tikz@ensure@dollar@catcode{}
+\makeatother
 
 \theoremstyle{definition}
 \newtheorem{theorem}{Theorem}[chapter]
@@ -116,15 +142,19 @@ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisc
 \tableofcontents
 \thispagestyle{empty}
 
+\imode<text>{
+  \itexSetCatcodes
+}
+
 %\include{Acknowledgements}
 \include{Introduction}
-\include{Prerequisites}
+\include{Prerequisites} % Subscripts in footnotes
 \include{IntuitiveDefinitionGroups}
-\include{CayleyDiagrams}
+\include{CayleyDiagrams} % Underscores in file names (changed to -)
 \include{IntroSubgroupsIsomorphisms}
-\include{FormalGroups}
-\include{Families}
-\include{CosetsLagrangeNormal}
+\include{FormalGroups} % Label in equation environment
+\include{Families} % Subscripts in footnotes
+\include{CosetsLagrangeNormal} % Subscripts in footnotes
 \include{ProductsQuotients}
 %Appendices
 \include{ElementsOfStyle}
